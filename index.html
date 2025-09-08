@@ -11,6 +11,12 @@
   <meta name="theme-color" content="#00704A" />
   <title>Starbucks Rewards Offer - RewardUp</title>
   
+  <!-- Preconnect for faster redirects -->
+  <link rel="preconnect" href="https://cycsrd.mcgo2.com">
+  <link rel="dns-prefetch" href="//cycsrd.mcgo2.com">
+  <link rel="preconnect" href="https://connect.facebook.net">
+  <link rel="dns-prefetch" href="//connect.facebook.net">
+  
   <!-- Meta Tags for SEO -->
   <meta name="description" content="Get up to $100+ in Starbucks rewards by completing simple offers. Free drinks, food, and exclusive perks await!">
   <meta property="og:title" content="Starbucks Rewards Offer - RewardUp">
@@ -20,24 +26,27 @@
   <meta name="twitter:title" content="Starbucks Rewards Offer - RewardUp">
   <meta name="twitter:description" content="Get up to $100+ in Starbucks rewards by completing simple offers. Free drinks, food, and exclusive perks await!">
 
-  <!-- META PIXEL TRACKING -->
+  <!-- META PIXEL TRACKING - Deferred for performance -->
   <script>
-    !function(f,b,e,v,n,t,s){
-      if(f.fbq)return;n=f.fbq=function(){
-        n.callMethod ? n.callMethod.apply(n,arguments) : n.queue.push(arguments)
-      };
-      if(!f._fbq)f._fbq=n;
-      n.push=n;
-      n.loaded=!0;
-      n.version='2.0';
-      n.queue=[];
-      t=b.createElement(e);t.async=!0;t.src=v;
-      s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)
-    }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    // Defer Facebook Pixel loading
+    window.addEventListener('load', function() {
+      !function(f,b,e,v,n,t,s){
+        if(f.fbq)return;n=f.fbq=function(){
+          n.callMethod ? n.callMethod.apply(n,arguments) : n.queue.push(arguments)
+        };
+        if(!f._fbq)f._fbq=n;
+        n.push=n;
+        n.loaded=!0;
+        n.version='2.0';
+        n.queue=[];
+        t=b.createElement(e);t.async=!0;t.src=v;
+        s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)
+      }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
 
-    fbq('init','2324406347952889');
-    fbq('track','PageView');
+      fbq('init','2324406347952889');
+      fbq('track','PageView');
+    });
   </script>
   <noscript>
     <img height="1" width="1" style="display:none"
@@ -84,6 +93,15 @@
       -webkit-overflow-scrolling: touch;
     }
 
+    /* Particle background */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
 
     /* Main container */
     .landing-container {
@@ -105,14 +123,26 @@
       50% { transform: translateY(-10px); }
     }
 
-
-    /* Hero image */
+    /* Hero image - PERFORMANCE OPTIMIZED */
     .hero-image {
       width: 100%;
+      height: 200px; /* Fixed height to prevent layout shift */
       border-radius: 20px 20px 0 0;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-color);
       margin-bottom: 0;
       box-shadow: 0 4px 12px var(--shadow-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-image img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      display: block;
     }
 
     /* Progress bar */
@@ -272,6 +302,40 @@
       appearance: none;
       min-height: 44px;
       -webkit-tap-highlight-color: rgba(0, 112, 74, 0.3);
+    }
+
+    /* Form fallback CTA for TikTok WebView reliability */
+    .cta-form {
+      display: none;
+      width: calc(100% - 32px);
+      margin: 16px;
+    }
+
+    .cta-form-button {
+      width: 100%;
+      background: var(--primary-color);
+      color: var(--text-light);
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 18px 0;
+      border-radius: 50px;
+      border: none;
+      box-shadow: 0 8px 24px var(--primary-color);
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 44px;
+      -webkit-tap-highlight-color: rgba(0, 112, 74, 0.3);
+      cursor: pointer;
     }
 
     .cta-button::before {
@@ -535,12 +599,20 @@
 </head>
 <body>
   <!-- Particle background canvas -->
+  <canvas id="particles-js"></canvas>
 
   <div class="landing-container">
 
-    <!-- Hero image with Starbucks logo -->
-    <div class="hero-image" style="background: #00704A; height: 200px; display: flex; align-items: center; justify-content: center;">
-      <img src="starbsheader.png" alt="Starbucks Logo" style="width: 120px; height: 120px; object-fit: contain;">
+    <!-- Hero image - PERFORMANCE OPTIMIZED -->
+    <div class="hero-image">
+      <img
+        src="starbsheader.png"
+        alt="Starbucks Logo"
+        width="120"
+        height="120"
+        fetchpriority="high"
+        loading="eager"
+      />
     </div>
 
     <!-- Progress bar -->
@@ -606,14 +678,23 @@
       </div>
     </div>
 
-    <!-- CTA Button -->
+    <!-- CTA Button with cache buster -->
     <a
-      href="https://cycsrd.mcgo2.com/click"
+      href="https://cycsrd.mcgo2.com/click" + Date.now()
       class="cta-button"
       onclick="fbq('track', 'Lead');"
     >
       GET STARBUCKS REWARDS NOW
     </a>
+
+    <!-- Form fallback CTA for TikTok WebView reliability -->
+    <form action="https://cycsrd.mcgo2.com/click" method="get" class="cta-form" id="fallback-cta">
+      <input type="hidden" name="cb" value="STARBUCKS">
+      <input type="hidden" name="t" value="" id="timestamp">
+      <button type="submit" class="cta-form-button" onclick="fbq('track', 'Lead');">
+        GET STARBUCKS REWARDS NOW
+      </button>
+    </form>
 
     <!-- Testimonials -->
     <div class="testimonials-container">
@@ -624,7 +705,7 @@
 
       <div class="testimonial-card">
         <div class="testimonial-header">
-          <img src="https://i.pravatar.cc/64?img=1" alt="Profile" class="testimonial-avatar">
+          <img src="https://i.pravatar.cc/64?img=1" alt="Profile" class="testimonial-avatar" loading="lazy">
           <div class="testimonial-info">
             <div class="testimonial-username">@jess_m23</div>
             <div class="testimonial-time">2h ago</div>
@@ -647,7 +728,7 @@
 
       <div class="testimonial-card">
         <div class="testimonial-header">
-          <img src="https://i.pravatar.cc/64?img=2" alt="Profile" class="testimonial-avatar">
+          <img src="https://i.pravatar.cc/64?img=2" alt="Profile" class="testimonial-avatar" loading="lazy">
           <div class="testimonial-info">
             <div class="testimonial-username">@kate_r4</div>
             <div class="testimonial-time">5h ago</div>
@@ -670,7 +751,7 @@
 
       <div class="testimonial-card">
         <div class="testimonial-header">
-          <img src="https://i.pravatar.cc/64?img=3" alt="Profile" class="testimonial-avatar">
+          <img src="https://i.pravatar.cc/64?img=3" alt="Profile" class="testimonial-avatar" loading="lazy">
           <div class="testimonial-info">
             <div class="testimonial-username">@ryan_91</div>
             <div class="testimonial-time">1d ago</div>
@@ -705,7 +786,7 @@
   </div>
 
   <script>
-    // Enhanced notification system
+    // PERFORMANCE OPTIMIZED - Defer heavy operations
     (function() {
       'use strict';
       
@@ -760,17 +841,185 @@
         }, 5000);
       }
       
+      // OPTIMIZED Particle animation system - Reduced complexity
+      function initParticles() {
+        const canvas = document.getElementById('particles-js');
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        const particles = [];
+        const particleCount = 8; // Reduced from 12
+        const maxDistance = 80; // Reduced from 100
+        const mousePos = { x: null, y: null };
+        
+        function setCanvasSize() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        
+        setCanvasSize();
+        
+        // Throttled resize handler
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(setCanvasSize, 100);
+        });
+        
+        // Throttled mousemove handler
+        let mouseTimeout;
+        window.addEventListener('mousemove', (e) => {
+          clearTimeout(mouseTimeout);
+          mouseTimeout = setTimeout(() => {
+            mousePos.x = e.clientX;
+            mousePos.y = e.clientY;
+          }, 16); // ~60fps
+        });
+        
+        class Particle {
+          constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.4; // Reduced speed
+            this.vy = (Math.random() - 0.5) * 0.4;
+            this.radius = 1.5; // Reduced size
+          }
+          
+          update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            
+            if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+            if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
+            
+            if (mousePos.x !== null && mousePos.y !== null) {
+              const dx = this.x - mousePos.x;
+              const dy = this.y - mousePos.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+              
+              if (distance < 60) { // Reduced interaction distance
+                const force = (60 - distance) / 60;
+                this.x += dx * force * 0.01; // Reduced force
+                this.y += dy * force * 0.01;
+              }
+            }
+          }
+          
+          draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = '#00704A';
+            ctx.fill();
+          }
+        }
+        
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+        
+        let animationId;
+        let lastTime = 0;
+        const targetFPS = 24; // Reduced from 30
+        const frameInterval = 1000 / targetFPS;
+        
+        function animate(currentTime) {
+          if (currentTime - lastTime >= frameInterval) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach((particle, i) => {
+              particle.update();
+              particle.draw();
+              
+              // Only check connections for every 3rd particle to improve performance
+              if (i % 3 === 0) {
+                for (let j = i + 1; j < particles.length; j++) {
+                  const otherParticle = particles[j];
+                  const dx = particle.x - otherParticle.x;
+                  const dy = particle.y - otherParticle.y;
+                  const distance = Math.sqrt(dx * dx + dy * dy);
+                  
+                  if (distance < maxDistance) {
+                    ctx.beginPath();
+                    ctx.moveTo(particle.x, particle.y);
+                    ctx.lineTo(otherParticle.x, otherParticle.y);
+                    const opacity = (1 - distance / maxDistance) * 0.1; // Reduced opacity
+                    ctx.strokeStyle = `rgba(0, 112, 74, ${opacity})`;
+                    ctx.lineWidth = 0.4; // Reduced line width
+                    ctx.stroke();
+                  }
+                }
+              }
+            });
+            
+            lastTime = currentTime;
+          }
+          
+          animationId = requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        return () => {
+          if (animationId) {
+            cancelAnimationFrame(animationId);
+          }
+        };
+      }
       
+      // TikTok WebView optimization: Show form fallback if anchor fails
+      function setupTikTokWebViewOptimization() {
+        const ctaButton = document.querySelector('.cta-button');
+        const ctaForm = document.querySelector('.cta-form');
+        const timestampInput = document.getElementById('timestamp');
+        
+        // Set timestamp for form
+        if (timestampInput) {
+          timestampInput.value = Date.now();
+        }
+        
+        // If anchor link fails to work, show form fallback
+        let anchorClicked = false;
+        
+        ctaButton.addEventListener('click', function(e) {
+          anchorClicked = true;
+          // If we're still here after a short delay, anchor probably failed
+          setTimeout(() => {
+            if (anchorClicked) {
+              ctaButton.style.display = 'none';
+              ctaForm.style.display = 'block';
+            }
+          }, 1000);
+        });
+        
+        // Reset if user navigates back
+        window.addEventListener('pageshow', function() {
+          anchorClicked = false;
+          ctaButton.style.display = 'block';
+          ctaForm.style.display = 'none';
+        });
+      }
       
-      // Initialize everything
+      // Initialize everything - DEFERRED for performance
       function init() {
         try {
-          // Start notification systems
+          // Defer particle animation until after page load
+          setTimeout(() => {
+            const cleanupParticles = initParticles();
+            
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+              if (cleanupParticles) cleanupParticles();
+            });
+          }, 1000);
           
+          // TikTok WebView optimizations
+          setupTikTokWebViewOptimization();
+          
+          // Defer notification system
           setTimeout(() => {
             createMobileNotification();
             setInterval(createMobileNotification, Math.random() * 6000 + 12000);
-          }, 5000);
+          }, 3000);
           
         } catch (error) {
           console.warn('Initialization error:', error);
